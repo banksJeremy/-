@@ -5,6 +5,8 @@ Copyright 2011 Joey Silva and Jeremy Banks
 ###
 log = (arguments...) -> console?.log?(arguments...)
 
+### main activation when the database and DOM are ready ###
+
 whenReady = (db, $) ->
     body = $("body")
     
@@ -22,29 +24,47 @@ whenReady = (db, $) ->
         time: 20
         location: "chicago, il, us"
     
-    
-    transaction.oncomplete = (event) ->
-        transaction = db.transaction ["data"], IDBTransaction.READ_WRITE
+    transaction.oncomplete = ->
+        transaction = db.transaction ["data"], IDBTransaction.READ
         data = transaction.objectStore "data"
         
-        purpleRequest = data.get(1)
-        purpleRequest.onsuccess = (event) ->
-            alert "Got data: " + JSON.stringify event.target.result
-        purpleRequest.onerror = (event) ->
-            console.log event
-            alert event
+        log "All events by time:"
+        
+        data.index("time").openCursor().onsuccess = ->
+            cursor = event.target.result
+            
+            if cursor
+                console.log cursor.value
+                cursor.continue()
+            else
+                afterPrinting()
+    
+    afterPrinting = ->
+        console.log "Done"
 
-dbVersion = 0.0
+### remove vendor prefixes from IndexedDB API. ###
 
-window.indexedDB = window.indexedDB or
-                   window.webkitIndexedDB or
-                   window.mozIndexedDB or
-                   alert "Fatal Error: IndexedDB unavailable."
+unprefixName = (name, nameNotLeading) ->
+    nameNotLeading ?= name
+    
+    window[name] = window[name] or
+                   window["webkit" + nameNotLeading] or
+                   window["moz" + nameNotLeading] or
+                   alert "Fatal Error: #{name} is unavailable."
 
-window.IDBTransaction = window.IDBTransaction or
-                        window.webkitIDBTransaction or
-                        window.mozIDBTransaction or
-                        alert "Fatal Error: IDBTransaction unavailable."
+unprefixName "indexedDB", "IndexedDB"
+
+for name of window
+    match = /^[a-z]+(IDB.*)$/.exec name
+    
+    if match
+        unsuffixedName = match[1]
+        
+        window[unsuffixedName] = window[name]
+
+### initialize database ###
+
+dbVersion = String "0.1"
 
 dbRequest = indexedDB.open "traqk-personal.db"
 
@@ -56,24 +76,25 @@ dbRequest.onsuccess = (event) ->
         jQuery ($) ->
             whenReady db, $
     
-    if db.version isnt dbVersion
-        log "Database version is wrong."
+    if db.version is dbVersion
+        setTimeout onDBReady, 0
+    else
+        log db.version, dbVersion
+        log "Database version is #{db.version}, #{dbVersion} expected."
         
         versionRequest = db.setVersion dbVersion
         
         versionRequest.onsuccess = ->
-            log "Correcting database version."
+            log "Configuring version #{dbVersion}."
+            
             db.deleteObjectStore "data"
             data = db.createObjectStore "data", keyPath: "id", autoIncrement: yes
             data.createIndex "time", "time"
             
             setTimeout onDBReady, 0
         
-        versionRequest.onerror = ->
-            log "Unable to correct database version."
-            alert "Fatal Error: Unable to re-version database (?)"
-    else
-        onDBReady()
+        versionRequest.onblocked = ->
+            log "Database version correction blocked."
 
 dbRequest.onerror = (event) ->
     alert "Fatal Error: Unable to load database"
