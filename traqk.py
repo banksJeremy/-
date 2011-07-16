@@ -6,7 +6,12 @@ db = sqlite3.connect("database.db")
 db.execute("""CREATE TABLE IF NOT EXISTS
               "example" (key TEXT PRIMARY KEY, value TEXT)""")
 
-with db:
+for row in db.execute("SELECT key, value FROM example"):
+    key, value = row
+    
+    print key, "is", value
+
+with db: # this is how you do a transaction
     db.execute("""INSERT INTO example VALUES ("hello", "world")""")
     db.execute("""INSERT INTO example VALUES ("world", "hello")""")
 
