@@ -8,11 +8,6 @@ log = (arguments...) -> console?.log?(arguments...)
 whenReady = (db, $) ->
     body = $("body")
     
-    body.append $("<p>Hello, world!</p>")
-    body.css "font": "14pt Georgia"
-    
-    log "Isn't this great?"
-    
     transaction = db.transaction ["data"], IDBTransaction.READ_WRITE
     data = transaction.objectStore "data"
     
@@ -26,21 +21,20 @@ whenReady = (db, $) ->
     data.put
         time: 20
         location: "chicago, il, us"
-        custom:
-            color: null
     
-    transaction.onsuccess ->
+    
+    transaction.oncomplete = (event) ->
         transaction = db.transaction ["data"], IDBTransaction.READ_WRITE
         data = transaction.objectStore "data"
         
-        purpleRequest = data.get(0)
+        purpleRequest = data.get(1)
         purpleRequest.onsuccess = (event) ->
             alert "Got data: " + JSON.stringify event.target.result
         purpleRequest.onerror = (event) ->
             console.log event
             alert event
 
-dbVersion = "71.0"
+dbVersion = 0.0
 
 window.indexedDB = window.indexedDB or
                    window.webkitIndexedDB or
@@ -58,20 +52,26 @@ dbRequest.onsuccess = (event) ->
     db = dbRequest.result
     
     onDBReady = ->
+        log "DB ready, now waiting for DOM."
         jQuery ($) ->
             whenReady db, $
     
-    if db.version != dbVersion
+    if db.version isnt dbVersion
+        log "Database version is wrong."
+        
         versionRequest = db.setVersion dbVersion
         
         versionRequest.onsuccess = ->
+            log "Correcting database version."
+            db.deleteObjectStore "data"
             data = db.createObjectStore "data", keyPath: "id", autoIncrement: yes
             data.createIndex "time", "time"
             
             setTimeout onDBReady, 0
         
         versionRequest.onerror = ->
-            alert "Fatal Error: Unable to reversion database (?)"
+            log "Unable to correct database version."
+            alert "Fatal Error: Unable to re-version database (?)"
     else
         onDBReady()
 
