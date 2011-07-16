@@ -6,17 +6,20 @@ import time
 bottle.debug(True)
 
 db = sqlite3.connect("database.db")
-db.execute("""
-    CREATE TABLE IF NOT EXISTS
-    "hits" (timestamp INT)
-""")
+
+with db:
+    db.execute("""
+        CREATE TABLE IF NOT EXISTS
+        "hits" (timestamp INT)
+    """)
 
 @bottle.route("/")
 def index():
     bottle.response.content_type = "text/plain"
     
-    db.execute("INSERT INTO hits (timestamp) VALUES (?)",
-               [time.time()])
+    with db:
+        db.execute("INSERT INTO hits (timestamp) VALUES (?)",
+                   [time.time()])
     
     for row in db.execute("SELECT timestamp FROM HITS"):
         timestamp, = row
