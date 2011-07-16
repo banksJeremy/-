@@ -3,6 +3,7 @@
 traqk - http://github.com/joeysilva/traqk
 Copyright 2011 Joey Silva and Jeremy Banks
 ###
+
 log = (arguments...) -> console?.log?(arguments...)
 
 ### main activation when the database and DOM are ready ###
@@ -64,7 +65,8 @@ for name of window
 
 ### initialize database ###
 
-dbVersion = String "0.1"
+dbVersion = String "0.0.1"
+# the version should be updated whenever the object stores and/or indexes change.
 
 dbRequest = indexedDB.open "traqk-personal.db"
 
