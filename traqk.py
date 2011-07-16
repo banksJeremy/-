@@ -1,22 +1,28 @@
 #!/usr/bin/env python2.7
-from bottle import route, run
+import bottle
 import sqlite3
+import time
+
+bottle.debug(True)
 
 db = sqlite3.connect("database.db")
-db.execute("""CREATE TABLE IF NOT EXISTS
-              "example" (key TEXT PRIMARY KEY, value TEXT)""")
+db.execute("""
+    CREATE TABLE IF NOT EXISTS
+    "hits" (timestamp INT)
+""")
 
-for row in db.execute("SELECT key, value FROM example"):
-    key, value = row
+@bottle.route("/")
+def index():
+    bottle.response.content_type = "text/plain"
     
-    print key, "is", value
+    db.execute("INSERT INTO hits (timestamp) VALUES (?)",
+               [time.time()])
+    
+    for row in db.execute("SELECT timestamp FROM HITS"):
+        timestamp, = row
+        
+        yield "Hit at " + str(timestamp) + "\n"
 
-with db: # this is how you do a transaction
-    db.execute("""INSERT INTO example VALUES ("hello", "world")""")
-    db.execute("""INSERT INTO example VALUES ("world", "hello")""")
-
-@route("/hello")
-def hello():
-    return "Hello World!"
-
-run(host="localhost", port=8080)
+import webbrowser
+webbrowser.open("http://localhost:8080/")
+bottle.run(host="localhost", port=8080)
