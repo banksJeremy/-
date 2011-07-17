@@ -95,7 +95,6 @@ dbRequest.onsuccess = (event) ->
         versionRequest.onsuccess = ->
             log "Configuring version #{dbVersion}."
             
-            db.deleteObjectStore "data"
             data = db.createObjectStore "data", keyPath: "id", autoIncrement: yes
             data.createIndex "time", "time"
             
