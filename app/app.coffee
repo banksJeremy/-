@@ -45,23 +45,29 @@ whenReady = (db, $) ->
 
 ### remove vendor prefixes from IndexedDB API. ###
 
-unprefixName = (name, nameNotLeading) ->
-    nameNotLeading ?= name
+try
+    unprefixName = (name, nameNotLeading) ->
+        nameNotLeading ?= name
     
-    window[name] = window[name] or
-                   window["webkit" + nameNotLeading] or
-                   window["moz" + nameNotLeading] or
-                   alert "Fatal Error: #{name} is unavailable."
-
-unprefixName "indexedDB", "IndexedDB"
-
-for name of window
-    match = /^[a-z]+(IDB.*)$/.exec name
+        window[name] = window[name] or
+                       window["webkit" + nameNotLeading] or
+                       window["moz" + nameNotLeading] or
+                       window["o" + nameNotLeading] or
+                       window["m" + nameNotLeading] or
+                       (-> throw new Error "Fatal Error: #{name} is unavailable.")()
     
-    if match
-        unsuffixedName = match[1]
+    unprefixName "indexedDB", "IndexedDB"
+    
+    for name of window
+        match = /^[a-z]+(IDB.*)$/.exec name
         
-        window[unsuffixedName] = window[name]
+        if match
+            unsuffixedName = match[1]
+            
+            window[unsuffixedName] = window[name]
+
+catch error
+    alert error
 
 ### initialize database ###
 
