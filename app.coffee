@@ -54,6 +54,8 @@ getAllValues = (db, objectStoreName, callback) ->
 
 withDBAndJQuery whenReady, "data.db",
                 "0.1", (db) ->
+                    try: db.deleteObjectStore "data"
+                    
                     data = db.createObjectStore "data", keyPath: "id", autoIncrement: yes
                     data.createIndex "time", "time"
                     data.createIndex "subject", "subject"
