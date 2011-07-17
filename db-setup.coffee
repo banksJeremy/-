@@ -26,17 +26,15 @@ try
     
     ### withDBAndJQuery calls f when the DOM and a specified database are available ###
     
-    window.withDBAndJQuery = (f, dbName = "database", dbVersion = -Infinity, dbVersionSetup = null) ->
+    window.withDB = (f, dbName = "database", dbVersion = -Infinity, dbVersionSetup = null) ->
         log "Attempting to open database #{jsonify dbName} version #{jsonify dbVersion}."
         
         dbRequest = indexedDB.open dbName
         db = null
         
         go = ->
-            log "Database ready, now waiting for jQuery()."
-            jQuery ($) ->
-                log "DOM/jQuery ready."
-                f(db, $)
+            log "Database ready."
+            f(db, $)
         
         dbRequest.onsuccess = (event) ->
             log "Database opened."

@@ -39,7 +39,7 @@
       }
     }
     /* withDBAndJQuery calls f when the DOM and a specified database are available */
-    window.withDBAndJQuery = function(f, dbName, dbVersion, dbVersionSetup) {
+    window.withDB = function(f, dbName, dbVersion, dbVersionSetup) {
       var db, dbRequest, go;
       if (dbName == null) {
         dbName = "database";
@@ -54,11 +54,8 @@
       dbRequest = indexedDB.open(dbName);
       db = null;
       go = function() {
-        log("Database ready, now waiting for jQuery().");
-        return jQuery(function($) {
-          log("DOM/jQuery ready.");
-          return f(db, $);
-        });
+        log("Database ready.");
+        return f(db, $);
       };
       dbRequest.onsuccess = function(event) {
         var versionRequest;

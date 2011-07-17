@@ -7,10 +7,11 @@ log ?= (arguments...) -> console?.log?(arguments...)
 
 ### main activation when the database and DOM are ready ###
 
-whenReady = (db, $) ->
+whenReady = (db) ->
     body = $("body")
-    body.css font: "14pt Georgia"
-    body.append $("<h1>").text "traqk"
+    body.css font: "14pt Helvetica"
+    h1 = $("<h1>").html "<span>Tra<span>Q</span>k</span>"
+    body.append h1
     
     log "Putting filler values into database."
     values = []
@@ -53,9 +54,9 @@ getAllValues = (db, objectStoreName, callback) ->
         else
             callback allData
 
-withDBAndJQuery whenReady, "data.db",
-                "0.1", (db) ->
-                    try: db.deleteObjectStore "data"
-                    data = db.createObjectStore "data", keyPath: "id", autoIncrement: yes
-                    data.createIndex "time", "time"
-                    data.createIndex "subject", "subject"
+withDB whenReady, "data.db",
+       "0.1", (db) ->
+           try: db.deleteObjectStore "data"
+           data = db.createObjectStore "data", keyPath: "id", autoIncrement: yes
+           data.createIndex "time", "time"
+           data.createIndex "subject", "subject"
