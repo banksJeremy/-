@@ -9,7 +9,8 @@ log ?= (arguments...) -> console?.log?(arguments...)
 
 whenReady = (db, $) ->
     body = $("body")
-    body.css fontFamily: "Georgia"
+    body.css font: "14pt Georgia"
+    body.append $("<h1>").text "traqk"
     
     log "Putting filler values into database."
     values = []
@@ -36,7 +37,7 @@ addValues = (db, objectStoreName, values, callback) ->
         objectStore.add value
     
     transaction.onsuccess = callback
-    transaction.onerror = (event) -> throw JSON.stringify event
+    transaction.onerror = (event) -> throw JSON.stringify event # I don't know.
 
 getAllValues = (db, objectStoreName, callback) ->
     transaction = db.transaction [objectStoreName]
@@ -55,8 +56,6 @@ getAllValues = (db, objectStoreName, callback) ->
 withDBAndJQuery whenReady, "data.db",
                 "0.1", (db) ->
                     try: db.deleteObjectStore "data"
-                    except: (->)()
-                    
                     data = db.createObjectStore "data", keyPath: "id", autoIncrement: yes
                     data.createIndex "time", "time"
                     data.createIndex "subject", "subject"
