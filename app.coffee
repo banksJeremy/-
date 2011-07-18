@@ -27,8 +27,8 @@ whenReady = (db) ->
     log "Displaying all values"
     getAllValues db, "data", (data) ->
         log "Got all values."
-        body.append $("<h2>").text("Current Data")
-        body.append $("<pre>").text(JSON.stringify data)
+        body.append $("<h2>").text "Current Data"
+        body.append $("<pre>").text JSON.stringify data
 
 addValues = (db, objectStoreName, values, callback) ->
     transaction = db.transaction [objectStoreName], IDBTransaction.READ_WRITE

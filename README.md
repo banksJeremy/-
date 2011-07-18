@@ -1,9 +1,9 @@
 traqk
 =====
 
-<http://github.com/joeysilva/traqk/>
+<http://traqk.me/> | <http://github.com/tarqk/traqk/>
 
+---
 
-
-Copyright 2011 Joey Silva and Jeremy Banks
+*Copyright 2011 Joey Silva and Jeremy Banks*
 
