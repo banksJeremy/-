@@ -1,7 +1,7 @@
 traqk
 =====
 
-<http://traqk.me/> | <http://github.com/tarqk/traqk/>
+<http://traqk.me/> | <http://github.com/traqk/traqk/>
 
 ---
 
