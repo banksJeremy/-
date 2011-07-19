@@ -2,17 +2,16 @@
   /*
   traqk - http://github.com/joeysilva/traqk
   Copyright 2011 Joey Silva and Jeremy Banks
-  */  var addValues, getAllValues, whenReady;
+  */
+  var addValues, getAllValues, whenReady;
   var __slice = Array.prototype.slice;
-    if (typeof log !== "undefined" && log !== null) {
-    log;
-  } else {
+  if (typeof log === "undefined" || log === null) {
     log = function() {
       var arguments, _ref;
       _ref = arguments, arguments = 1 <= _ref.length ? __slice.call(_ref, 0) : [];
       return typeof console !== "undefined" && console !== null ? typeof console.log === "function" ? console.log.apply(console, arguments) : void 0 : void 0;
     };
-  };
+  }
   /* main activation when the database and DOM are ready */
   whenReady = function(db) {
     var body, h1, values;
