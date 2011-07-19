@@ -2,6 +2,9 @@
 
 My interface for http://www.w3.org/TR/2011/WD-IndexedDB-20110419/
 
+Copyright 2011 Jeremy Banks for traqk <http://traqk.me/>  
+Released under the MIT license.
+
 $.openDB(name, objectStores, purge = no)
 - Returns a $.Deferrred $.IndexedDB.
 - The jQuery.IndexedDB will use the specified objectStores,
@@ -16,8 +19,7 @@ class $.IDBObjectStore (defined on $.IndexedDB().)
 - .get(constraints) returns an $.IDBResult or throws an Error.
   
   .get where: location: "toronto,on,ca" 
-  .get where: (time: ge: 0, lt: 10, ascending: yes)
-  .get withFilter: f, withMap: g
+  .get where: (time: ge: 0, lt: 10, ascending: yes), withFilter: f, withMap: g
 
 class $.IDBResult (returned by $.IDBObjectStore methods)
 - with @cursor,
@@ -25,7 +27,7 @@ class $.IDBResult (returned by $.IDBObjectStore methods)
 - .next() returns the $.Deferred next value 
 - .toDeferredArray() returns an $.Deferred Array of all available results
 - .each(f) asyncronousy calls f for each available result
-  stopping if a non-undefined falsey value is returned.
+  stopping if a non-undefined falsey value is returned.]
 ###
 
 class jQuery.IndexedDB

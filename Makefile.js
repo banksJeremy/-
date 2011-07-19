@@ -21,8 +21,6 @@ var filenames = fs.readdirSync(".")
                       return /\.coffee$/.test(name); });
 filenames.sort();
 
-filenames = ["jquery.IndexedDB.coffee", "app.coffee"];
-
 var coffeeCode = [];
 
 for(var i = 0; i < filenames.length; i++) {
