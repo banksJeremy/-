@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 var fs       = require("fs"),
-    UglifyJS = require("./_tools/UglifyJS/uglify-js.js"),
-    Coffee   = require("./_tools/CoffeeScript/lib/coffee-script.js");
+    UglifyJS = require("./_tools/UglifyJS-1.0.6/uglify-js.js"),
+    Coffee   = require("./_tools/CoffeeScript-1.1.1/lib/coffee-script.js");
 
 var minify = function(code) {
     var ast = UglifyJS.parser.parse(code);
@@ -20,8 +20,6 @@ var filenames = fs.readdirSync(".")
                   .filter(function(name) {
                       return /\.coffee$/.test(name); });
 filenames.sort();
-
-filenames = ["db-setup.coffee", "app.coffee"];
 
 var coffeeCode = [];
 
