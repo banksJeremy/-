@@ -8,31 +8,6 @@
   <body>
     <noscript><!-- fall back to server-based app --></noscript>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-    <script src="coffeescript-1.1.1.min.js"></script>
-    <script type="text/coffeescript">
-      # GETs a list of CoffeeScript files, then executes them in order
-      # once the DOM is loaded.
-      
-      files = ["db-setup.coffee", "app.coffee"]
-      
-      requests = (jQuery.ajax(url: file, dataType: "text") for file in files)
-      
-      doNextFile = (files, requests) ->
-        if files.length is 0
-          return
-        else
-          [file, files...] = files
-          [request, requests...] = requests
-          
-          request.success (data, textStatus, jqXHR) -> 
-            console?.log? "evaling file #{JSON.stringify file}"
-            CoffeeScript.eval data
-            doNextFile files, requests
-          
-          request.error (event) ->
-            throw new Error "Error loading #{JSON.stringify file}", event
-      
-      jQuery -> doNextFile files, requests
-    </script>
+    <script src="all.cm.js"></script>
   </body>
 </html>
