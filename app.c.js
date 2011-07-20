@@ -85,6 +85,8 @@
         subject: "me",
         x: 10,
         y: 0
+      }).then(function() {
+        return $.makeBox().text("Fake data put.");
       });
       return db.data.get().each(function(value) {
         return $.makeBox().text(JSON.stringfy(value));
