@@ -103,7 +103,7 @@ jQuery.openDB = (name, objectStores, purge = no) ->
             versionRequest.onerror = (event) ->
                 dbDeferred.reject "Error versioning database.", event
         
-        setTimeout (-> dbRequest.resolve dbObject), 0
+        setTimeout (-> dbDeferred.resolve dbObject), 0
     
     dbRequest.onerror = (event) ->
         dbDeferred.reject "Error opening database.", event
