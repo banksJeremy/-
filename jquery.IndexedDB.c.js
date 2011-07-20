@@ -17,6 +17,9 @@
   - All object stores are defiend as properties on this.
   
   class $.IDBObjectStore (defined on $.IndexedDB().)
+  - .add(object) returns a $.Deferred that the object is ADDed to the data store
+  - .addAll([objects...]) returns a $.Deferred, all/none of the objects are added
+  - .delete(constraints) returns an $.Deferred indicating success
   - .get(constraints) returns an $.IDBResult or throws an Error.
     
     .get where: location: "toronto,on,ca" 
@@ -26,17 +29,39 @@
   - with @cursor,
   - @filter and @map can be defined to modify values.
   - .next() returns the $.Deferred next value 
-  - .toDeferredArray() returns an $.Deferred Array of all available results
+  - .toDeferredArray() returns an $.Deferred Array of a1ll available results
   - .each(f) asyncronousy calls f for each available result
-    stopping if a non-undefined falsey value is returned.]
+    stopping if a non-undefined falsey value is returned.
+  
+  Maybe use some randomly-generated key, rather than just the autoincrementing one.
+  
   */
-  var match, name;
+  var generateString, match, name, _name, _ref;
   var __hasProp = Object.prototype.hasOwnProperty, __indexOf = Array.prototype.indexOf || function(item) {
     for (var i = 0, l = this.length; i < l; i++) {
       if (this[i] === item) return i;
     }
     return -1;
   };
+  generateString = function(digits, bits) {
+    var n, _;
+    if (digits == null) {
+      digits = "0123456789ABCDEF";
+    }
+    if (bits == null) {
+      bits = 128;
+    }
+    n = Math.ceil(digits * Math.log(digits.length) / Math.log(2));
+    return ((function() {
+      var _results;
+      _results = [];
+      for (_ = 0; 0 <= n ? _ < n : _ > n; 0 <= n ? _++ : _--) {
+        _results.push(digits[(Math.random() * digits.length) | 0]);
+      }
+      return _results;
+    })()).join("");
+  };
+  console.log(generateString());
   jQuery.IndexedDB = (function() {
     function IndexedDB(db, objectStores) {
       var name;
@@ -155,7 +180,9 @@
   })();
   for (name in window) {
     if (match = /^[a-z]+(IDB.*)$/.exec(name)) {
-      window[match[1]] = window[name];
+      if ((_ref = window[_name = match[1]]) == null) {
+        window[_name] = window[name];
+      }
     }
   }
 }).call(this);

@@ -2,7 +2,12 @@
   /*
   traqk - http://github.com/joeysilva/traqk
   Copyright 2011 Joey Silva and Jeremy Banks
-  */  jQuery(function() {
+  */
+  var deferredDB;
+  deferredDB = $.openDB("data.db", {
+    data: ["time", "subject"]
+  });
+  jQuery(function() {
     var body, contents, h1;
     body = $("body");
     body.append(h1 = $("<h1>").text("TraQk"));
@@ -43,7 +48,8 @@
         margin: ".4em",
         border: ".125em solid #111",
         padding: ".4em",
-        borderTopLeftRadius: "1em",
+        borderRadius: "1em",
+        borderTopRightRadius: "0",
         boxShadow: ".05em .05em .5em black",
         cursor: "pointer"
       });
@@ -53,12 +59,12 @@
         });
       }), (function() {
         return box.css({
-          borderColor: "black"
+          borderColor: "#111"
         });
       }));
-      box.click(function() {
+      box.click((function() {
         return box.hide("0.2");
-      });
+      }));
       box.perlin({
         gridSpacing: 2.1,
         opacity: .05,
@@ -72,11 +78,15 @@
       return box;
     };
     $.makeBox().html("Hello, World!");
-    return $.openDB("data.db", {
-      data: ["time", "subject"]
-    }).then(function(db) {
+    return deferredDB.then(function(db) {
       $.makeBox().text("Database loaded.");
-      return db.get().each(function(value) {
+      db.data.put({
+        time: 10,
+        subject: "me",
+        x: 10,
+        y: 0
+      });
+      return db.data.get().each(function(value) {
         return $.makeBox().text(JSON.stringfy(value));
       });
     });
