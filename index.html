@@ -12,6 +12,16 @@
       src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"
     ></script>
     <script src="jquery.IndexedDB.c.js"></script>
+    <script src="_tools/jQuery.Perlin-master/jquery-perlin.min.js"></script>
     <script src="app.c.js"></script>
+    
+    <!-- CoffeeTable for debugging -->
+    <script src="_tools/CoffeeTable-0.1.0/coffeetable-min.js"></script>
+    <script>
+      CoffeeTable.deferInit();
+      $(function() {
+        CoffeeTable.init({
+          coffeescript_js: "_tools/CoffeeScript-1.1.1/extras/coffee-script.js"}) })
+    </script>
   </body>
 </html>

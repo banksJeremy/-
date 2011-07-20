@@ -3,61 +3,72 @@ traqk - http://github.com/joeysilva/traqk
 Copyright 2011 Joey Silva and Jeremy Banks
 ###
 
-log ?= (arguments...) -> console?.log?(arguments...)
-
-### main activation when the database and DOM are ready ###
-
-whenReady = (db) ->
+jQuery ->
     body = $("body")
-    body.css font: "14pt Helvetica"
-    h1 = $("<h1>").html "<span>Tra<span>Q</span>k</span>"
-    body.append h1
     
-    log "Putting filler values into database."
-    values = []
-    values.push foo: "Bar",
-                time: 99,
-                age: 20,
-                subject: 2,
-    values.push time: 13,
-                subject: "CN Tower"
+    body.append(h1 = $("<h1>").text("TraQk"))
     
-    addValues db, "data", values, -> log "Filler values added."
+    body.append(contents = $("<div>"))
     
-    log "Displaying all values"
-    getAllValues db, "data", (data) ->
-        log "Got all values."
-        body.append $("<h2>").text "Current Data"
-        body.append $("<pre>").text JSON.stringify data
-
-addValues = (db, objectStoreName, values, callback) ->
-    transaction = db.transaction [objectStoreName], IDBTransaction.READ_WRITE
-    objectStore = transaction.objectStore objectStoreName
+    body.css
+        margin: 0
+        padding: 0
+        background: "rgb(255, 252, 250)"
+        fontFamily: "sans-serif"
+        textAlign: "right"
     
-    for value in values
-        objectStore.add value
+    body.perlin
+        gridSpacing: 1.413
+        color: [16, 16, 0]
+        opacity: .1
+        tileable: yes
     
-    transaction.onsuccess = callback
-    transaction.onerror = (event) -> throw JSON.stringify event # I don't know.
-
-getAllValues = (db, objectStoreName, callback) ->
-    transaction = db.transaction [objectStoreName]
-    objectStore = transaction.objectStore objectStoreName
+    h1.css
+        background: "#222"
+        borderBottom: ".125em solid black"
+        color: "white"
+        padding: ".125em .25em 0"
+        margin: 0
+        boxShadow: "0 0 .125em black"
+        textAlign: "left"
+        textIndent: ".125em"
     
-    allData = []
-    
-    objectStore.openCursor().onsuccess = ->
-        cursor = event.target.result
+    $.makeBox = ->
+        box = $("<div>")
         
-        if cursor
-            allData.push cursor.value
-        else
-            callback allData
-
-withDB whenReady, "data.db",
-       "0.1", (db) ->
-           try db.deleteObjectStore "data"
-           
-           data = db.createObjectStore "data", keyPath: "id", autoIncrement: yes
-           data.createIndex "time", "time"
-           data.createIndex "subject", "subject"
+        box.css
+            textAlign: "left"
+            display: "inline-block"
+            height: "8em"
+            width: "12em"
+            background: "rgb(250, 255, 255)"
+            fontSize: "1.5em"
+            margin: ".4em"
+            border: ".125em solid #111"
+            padding: ".4em"
+            borderTopLeftRadius: "1em"
+            boxShadow: ".05em .05em .5em black"
+            cursor: "pointer"
+        
+        box.hover (-> box.css borderColor: "#FA2"), (-> box.css borderColor: "black")
+        
+        box.click ->
+            box.hide "0.2"
+        
+        box.perlin
+            gridSpacing: 2.1
+            opacity: .05
+            tileable: yes
+        
+        box.hide()
+        contents.prepend box
+        setTimeout (-> box.show "0.4"), 0
+        return box
+    
+    
+    $.makeBox().html "Hello, World!"
+    
+    $.openDB("data.db", data: ["time", "subject"]).then (db) ->
+        $.makeBox().text "Database loaded."
+        
+        db.get().each (value) -> $.makeBox().text JSON.stringfy value
