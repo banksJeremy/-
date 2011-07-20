@@ -3,6 +3,8 @@ traqk - http://github.com/joeysilva/traqk
 Copyright 2011 Joey Silva and Jeremy Banks
 ###
 
+deferredDB = $.openDB("data.db", data: ["time", "subject"])
+
 jQuery ->
     body = $("body")
     
@@ -46,14 +48,15 @@ jQuery ->
             margin: ".4em"
             border: ".125em solid #111"
             padding: ".4em"
-            borderTopLeftRadius: "1em"
+            borderRadius: "1em"
+            borderTopRightRadius: "0"
             boxShadow: ".05em .05em .5em black"
             cursor: "pointer"
         
-        box.hover (-> box.css borderColor: "#FA2"), (-> box.css borderColor: "black")
+        box.hover (-> box.css borderColor: "#FA2"),
+                  (-> box.css borderColor: "#111")
         
-        box.click ->
-            box.hide "0.2"
+        box.click (-> box.hide "0.2")
         
         box.perlin
             gridSpacing: 2.1
@@ -65,10 +68,9 @@ jQuery ->
         setTimeout (-> box.show "0.4"), 0
         return box
     
-    
     $.makeBox().html "Hello, World!"
-    
-    $.openDB("data.db", data: ["time", "subject"]).then (db) ->
+    deferredDB.then (db) ->
         $.makeBox().text "Database loaded."
+        db.data.put (time: 10, subject: "me", x: 10, y: 0)
         
-        db.get().each (value) -> $.makeBox().text JSON.stringfy value
+        db.data.get().each (value) -> $.makeBox().text JSON.stringfy value
