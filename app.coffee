@@ -73,7 +73,7 @@ jQuery ->
     deferredDB.then (db) ->
         $.makeBox().text "Database loaded."
         
-        db.data.put(time: 10, subject: "me", x: 10, y: 0).then
+        db.data.put(time: 10, subject: "me", x: 10, y: 0).then ->
             $.makeBox().text "Fake data put."
         
         db.data.get().each (value) ->
