@@ -142,7 +142,7 @@
         };
       }
       return setTimeout((function() {
-        return dbRequest.resolve(dbObject);
+        return dbDeferred.resolve(dbObject);
       }), 0);
     };
     dbRequest.onerror = function(event) {

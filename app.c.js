@@ -2,87 +2,83 @@
   /*
   traqk - http://github.com/joeysilva/traqk
   Copyright 2011 Joey Silva and Jeremy Banks
-  */
-  var addValues, getAllValues, whenReady;
-  var __slice = Array.prototype.slice;
-  if (typeof log === "undefined" || log === null) {
-    log = function() {
-      var arguments, _ref;
-      _ref = arguments, arguments = 1 <= _ref.length ? __slice.call(_ref, 0) : [];
-      return typeof console !== "undefined" && console !== null ? typeof console.log === "function" ? console.log.apply(console, arguments) : void 0 : void 0;
-    };
-  }
-  /* main activation when the database and DOM are ready */
-  whenReady = function(db) {
-    var body, h1, values;
+  */  jQuery(function() {
+    var body, contents, h1;
     body = $("body");
+    body.append(h1 = $("<h1>").text("TraQk"));
+    body.append(contents = $("<div>"));
     body.css({
-      font: "14pt Helvetica"
+      margin: 0,
+      padding: 0,
+      background: "rgb(255, 252, 250)",
+      fontFamily: "sans-serif",
+      textAlign: "right"
     });
-    h1 = $("<h1>").html("<span>Tra<span>Q</span>k</span>");
-    body.append(h1);
-    log("Putting filler values into database.");
-    values = [];
-    values.push({
-      foo: "Bar"
-    }, {
-      time: 99,
-      age: 20,
-      subject: 2
+    body.perlin({
+      gridSpacing: 1.413,
+      color: [16, 16, 0],
+      opacity: .1,
+      tileable: true
     });
-    values.push({
-      time: 13
-    }, {
-      subject: "CN Tower"
+    h1.css({
+      background: "#222",
+      borderBottom: ".125em solid black",
+      color: "white",
+      padding: ".125em .25em 0",
+      margin: 0,
+      boxShadow: "0 0 .125em black",
+      textAlign: "left",
+      textIndent: ".125em"
     });
-    addValues(db, "data", values, function() {
-      return log("Filler values added.");
-    });
-    log("Displaying all values");
-    return getAllValues(db, "data", function(data) {
-      log("Got all values.");
-      body.append($("<h2>").text("Current Data"));
-      return body.append($("<pre>").text(JSON.stringify(data)));
-    });
-  };
-  addValues = function(db, objectStoreName, values, callback) {
-    var objectStore, transaction, value, _i, _len;
-    transaction = db.transaction([objectStoreName], IDBTransaction.READ_WRITE);
-    objectStore = transaction.objectStore(objectStoreName);
-    for (_i = 0, _len = values.length; _i < _len; _i++) {
-      value = values[_i];
-      objectStore.add(value);
-    }
-    transaction.onsuccess = callback;
-    return transaction.onerror = function(event) {
-      throw JSON.stringify(event);
+    $.makeBox = function() {
+      var box;
+      box = $("<div>");
+      box.css({
+        textAlign: "left",
+        display: "inline-block",
+        height: "8em",
+        width: "12em",
+        background: "rgb(250, 255, 255)",
+        fontSize: "1.5em",
+        margin: ".4em",
+        border: ".125em solid #111",
+        padding: ".4em",
+        borderTopLeftRadius: "1em",
+        boxShadow: ".05em .05em .5em black",
+        cursor: "pointer"
+      });
+      box.hover((function() {
+        return box.css({
+          borderColor: "#FA2"
+        });
+      }), (function() {
+        return box.css({
+          borderColor: "black"
+        });
+      }));
+      box.click(function() {
+        return box.hide("0.2");
+      });
+      box.perlin({
+        gridSpacing: 2.1,
+        opacity: .05,
+        tileable: true
+      });
+      box.hide();
+      contents.prepend(box);
+      setTimeout((function() {
+        return box.show("0.4");
+      }), 0);
+      return box;
     };
-  };
-  getAllValues = function(db, objectStoreName, callback) {
-    var allData, objectStore, transaction;
-    transaction = db.transaction([objectStoreName]);
-    objectStore = transaction.objectStore(objectStoreName);
-    allData = [];
-    return objectStore.openCursor().onsuccess = function() {
-      var cursor;
-      cursor = event.target.result;
-      if (cursor) {
-        return allData.push(cursor.value);
-      } else {
-        return callback(allData);
-      }
-    };
-  };
-  withDB(whenReady, "data.db", "0.1", function(db) {
-    var data;
-    try {
-      db.deleteObjectStore("data");
-    } catch (_e) {}
-    data = db.createObjectStore("data", {
-      keyPath: "id",
-      autoIncrement: true
+    $.makeBox().html("Hello, World!");
+    return $.openDB("data.db", {
+      data: ["time", "subject"]
+    }).then(function(db) {
+      $.makeBox().text("Database loaded.");
+      return db.get().each(function(value) {
+        return $.makeBox().text(JSON.stringfy(value));
+      });
     });
-    data.createIndex("time", "time");
-    return data.createIndex("subject", "subject");
   });
 }).call(this);
