@@ -16,6 +16,9 @@ class $.IndexedDB (returned by $.openDB())
 - All object stores are defiend as properties on this.
 
 class $.IDBObjectStore (defined on $.IndexedDB().)
+- .add(object) returns a $.Deferred that the object is ADDed to the data store
+- .addAll([objects...]) returns a $.Deferred, all/none of the objects are added
+- .delete(constraints) returns an $.Deferred indicating success
 - .get(constraints) returns an $.IDBResult or throws an Error.
   
   .get where: location: "toronto,on,ca" 
@@ -25,10 +28,19 @@ class $.IDBResult (returned by $.IDBObjectStore methods)
 - with @cursor,
 - @filter and @map can be defined to modify values.
 - .next() returns the $.Deferred next value 
-- .toDeferredArray() returns an $.Deferred Array of all available results
+- .toDeferredArray() returns an $.Deferred Array of a1ll available results
 - .each(f) asyncronousy calls f for each available result
-  stopping if a non-undefined falsey value is returned.]
+  stopping if a non-undefined falsey value is returned.
+
+Maybe use some randomly-generated key, rather than just the autoincrementing one.
+
 ###
+
+generateString = (digits="0123456789ABCDEF", bits=128) ->
+    n = Math.ceil(digits * Math.log(digits.length) / Math.log(2))
+    return (digits[(Math.random() * digits.length) | 0] for _ in [0...n]).join ""
+
+console.log generateString()
 
 class jQuery.IndexedDB
     constructor: (db, objectStores) ->
@@ -121,4 +133,4 @@ window.indexedDB = window.indexedDB or
 
 for name of window
     if match = /^[a-z]+(IDB.*)$/.exec name
-        window[match[1]] = window[name]
+        window[match[1]] ?= window[name]
