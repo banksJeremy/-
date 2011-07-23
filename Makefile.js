@@ -43,6 +43,8 @@ for (var i = 0; i < filenames.length; i++) {
     fs.writeFileSync(filename, asJs, "utf8");
 }
 
+/*
+
 filenames.push("all.coffee");
 jsCode.push(jsCode.join("\n"));
 
@@ -59,3 +61,4 @@ for (var i = 0; i < filenames.length; i++) {
     fs.writeFileSync(filename, asMini, "utf8");
 }
 
+*/
