@@ -14,7 +14,7 @@ class ServerController extends http.Server
 		@on "request", (args...) => @handleRequest args...
 	
 	handleRequest: (req, res) ->
-		switch request.path
+		switch req.path
 			when "/client_api/0.1/authenticate"
 				res.writeHead 200, "Content-type": "text/json"
 				res.write JSON.stringify status: "logged-in"
@@ -28,8 +28,8 @@ class ServerController extends http.Server
 				res.write fs.readFileSync "app.c.js"
 			
 			else
-				res.writeHead 404
-			
+				res.writeHead 200
+		
 		res.end()
 	
 	reply: (data) ->

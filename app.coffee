@@ -29,7 +29,6 @@ verify_auth = (data, textStatus, jqXHR) ->
   			alert "Bad error!"
   			login()
 
-
 bootstrap ->
 	body = $("body")
 	
