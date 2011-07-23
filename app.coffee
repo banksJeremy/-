@@ -27,11 +27,10 @@ jQuery ->
     
     h1.css
         background: "#222"
-        borderBottom: ".125em solid black"
         color: "white"
         padding: ".125em .25em 0"
         margin: 0
-        boxShadow: "0 0 .125em black"
+        boxShadow: "0 0 .125em #222"
         textAlign: "left"
         textIndent: ".125em"
     
@@ -50,7 +49,7 @@ jQuery ->
             padding: ".4em"
             borderRadius: "1em"
             borderTopRightRadius: "0"
-            boxShadow: ".05em .05em .5em black"
+            boxShadow: ".05em .05em .25em black"
             cursor: "pointer"
         
         box.hover (-> box.css borderColor: "#FA2"),
