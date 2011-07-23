@@ -7,35 +7,11 @@ Server
 ###
 
 http = require "http"
+url = require "url"
 
-class ServerController extends http.Server
-	constructor: (args...) ->
-		super args...
-		@on "request", (args...) => @handleRequest args...
-	
-	handleRequest: (req, res) ->
-		switch req.path
-			when "/client_api/0.1/authenticate"
-				res.writeHead 200, "Content-type": "text/json"
-				res.write JSON.stringify status: "logged-in"
-			
-			when "/"
-				res.writeHead 200, "Content-type": "text/html"
-				res.write """<!doctype html><script src="app.c.js"></script>"""
-			
-			when "/app.c.js"
-				res.writeHead 200, "Content-type": "application/javascript"
-				res.write fs.readFileSync "app.c.js"
-			
-			else
-				res.writeHead 200
-		
-		res.end()
-	
-	reply: (data) ->
-		res.write JSON.stringify
-	
-	authenticate: (username, password) ->
+class ClientAPI_0_1
+    
+    @authenticate: (username, password) ->
 		if username and password
 			if verify username, password
 				status = "logged-in"
@@ -45,13 +21,62 @@ class ServerController extends http.Server
 			status = "logged-in"
 		else
 			status = "log-in"
-		return @reply status
+		return status
 		
-	verify: (username, password) ->
-		username == "joey" and password == "password" or 
-		username == "jeremy" and password == "password"
+	@verify: (username, password) ->
+		username is "joey" and password is "password" or 
+		username is "jeremy" and password is "password"
+
+class ServerController
+	constructor: ->
+		console.log "MAKING SERVER"
+		@server = http.createServer (req, res) =>
+			console.log "GOT"
+			@handleRequest req, res
+	
+	listen: ->
+		console.log "LISTENING, lISTENING"
+		@server.listen 1234, "localhost"
+	
+	handleRequest: (req, res) ->
+		console.log "Loading #{req}"
+		
+		path = url.parse req.path
+		
+        paths = path.pathname.split(/\//g).filter (value) -> value.length > 0
+        
+        a/b/
+         /a/b / /
+        
+        
+        reddit.com/.xml <--
+        
+        while paths.length and paths[0].length is 0
+            # while the first path element is empty
+            paths.shift() # discard it
+        
+        if not paths.length
+            paths = ["index.html"]
+            
+            
+            when "index.html"
+				res.writeHead 200, "Content-type": "text/html"
+				res.write """<!doctype html><script src="app.c.js"></script>"""
+            when "app.c.js"
+				res.writeHead 200, "Content-type": "application/javascript"
+				res.write fs.readFileSync "app.c.js"
+
+            else
+                res.writeHead 404
+        
+        res.end()
+	
+	reply: (data) ->
+		res.write JSON.stringify
+	
+	
 
 # launch server
 console.log "Launching server on :1234"
 server = new ServerController
-server.listen 1234, ""
+server.listen()
