@@ -11,8 +11,8 @@ url = require "url"
 
 class ClientAPI_0_1
     
-    @authenticate: (username, password) ->
-		if username and password
+    authenticate: (username, password) ->
+		if username? and password?
 			if @verify username, password
 				status = "logged-in"
 			else
@@ -23,11 +23,11 @@ class ClientAPI_0_1
 			status = "log-in"
 		return status
 		
-	@verify: (username, password) ->
+	verify: (username, password) ->
 		username is "joey" and password is "password" or 
 		username is "jeremy" and password is "password"
 		
-	@check_cookie: -> true
+	check_cookie: -> true
 
 class ServerController
 	constructor: ->
