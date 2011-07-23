@@ -3,8 +3,6 @@ traqk - http://github.com/joeysilva/traqk
 Copyright 2011 Joey Silva and Jeremy Banks
 ###
 
-deferredDB = $.openDB("data.db", data: ["time", "subject"])
-
 jQuery ->
     body = $("body")
     
@@ -68,12 +66,3 @@ jQuery ->
         return box
     
     $.makeBox().html "Hello, World!"
-    
-    deferredDB.then (db) ->
-        $.makeBox().text "Database loaded."
-        
-        db.data.put(time: 10, subject: "me", x: 10, y: 0).then ->
-            $.makeBox().text "Fake data put."
-        
-        db.data.get().each (value) ->
-            $.makeBox().text JSON.stringfy value
