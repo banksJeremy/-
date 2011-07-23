@@ -6,16 +6,52 @@ Copyright 2011 Joey Silva and Jeremy Banks
 Server
 ###
 
-[hostname, port] = ["", 1234]
+http = require "http"
 
-handleRequest = (req, res) ->
-	if request.path == "/client_api/0.1/"
-		res.writeHead 200
-		res.write JSON.stringify status: "logged-in"
+class ServerController extends http.Server
+	constructor: (args...) ->
+		super args...
+		@on "request", (args...) => @handleRequest args...
+	
+	handleRequest: (req, res) ->
+		switch request.path
+			when "/client_api/0.1/authenticate"
+				res.writeHead 200, "Content-type": "text/json"
+				res.write JSON.stringify status: "logged-in"
+			
+			when "/"
+				res.writeHead 200, "Content-type": "text/html"
+				res.write """<!doctype html><script src="app.c.js"></script>"""
+			
+			when "/app.c.js"
+				res.writeHead 200, "Content-type": "application/javascript"
+				res.write fs.readFileSync "app.c.js"
+			
+			else
+				res.writeHead 404
+			
 		res.end()
+	
+	reply: (data) ->
+		res.write JSON.stringify
+	
+	authenticate: (username, password) ->
+		if username and password
+			if verify username, password
+				status = "logged-in"
+			else
+				status = "invalid-login"
+		else if check_cookie()
+			status = "logged-in"
+		else
+			status = "log-in"
+		return @reply status
+		
+	verify: (username, password) ->
+		username == "joey" and password == "password" or 
+		username == "jeremy" and password == "password"
 
 # launch server
-
-http = require "http"
-server = http.createServer handleRequest
-server.listen port, server
+console.log "Launching server on :1234"
+server = new ServerController
+server.listen 1234, ""
