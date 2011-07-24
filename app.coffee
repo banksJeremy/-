@@ -7,7 +7,7 @@ Client
 
 server_url = "http://localhost:1234/client_api/0.1/"
 
-login ->
+login = ->
 	login = prompt "Enter your login:"
 	
 	[username, password] = login.split /:/ 		#/Syntax highlighting
@@ -29,7 +29,7 @@ verify_auth = (data, textStatus, jqXHR) ->
   			alert "Bad error!"
   			login()
 
-bootstrap ->
+bootstrap = ->
 	body = $("body")
 	
 	body.append(h1 = $("<h1>").text("TraQk"))

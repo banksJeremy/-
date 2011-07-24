@@ -8,10 +8,11 @@ Server
 
 http = require "http"
 url = require "url"
+fs = require "fs"
 
 class ClientAPI_0_1
-    
-    authenticate: (username, password) ->
+
+	authenticate: (username, password) ->
 		if username? and password?
 			if @verify username, password
 				status = "logged-in"
@@ -43,7 +44,7 @@ class ServerController
 	handleRequest: (req, res) ->
 		console.log "Loading #{req}"
 		
-		path = url.parse req.path		
+		path = url.parse req.url
 		paths = path.pathname.split(/\//g).filter (value) -> value.length > 0
         
 		while paths.length and paths[0].length is 0
