@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*
 traqk - http://github.com/joeysilva/traqk
 Copyright 2011 Joey Silva and Jeremy Banks
@@ -53,6 +54,7 @@ var ServerController = (function() {
 	ServerController.prototype.handleRequest = function(req, res) {
         
         var postData = [];
+        req.setEncoding("utf8");
         req.on("data", function(chunk) {
             postData.push(chunk);
         });
@@ -64,6 +66,8 @@ var ServerController = (function() {
                 try {
                     postData = JSON.parse(postData.join("")); 
                 } catch (e) {
+                	console.log(e)
+                	console.log(postData)
                     res.writeHead(400);
                     return res.end();
                 }
