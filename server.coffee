@@ -39,7 +39,7 @@ class ServerController
 	
 	listen: ->
 		console.log "LISTENING, lISTENING"
-		@server.listen 1234, "localhost"
+		@server.listen 1235, "localhost"
 	
 	handleRequest: (req, res) ->
 		console.log "Loading #{req}"
@@ -55,12 +55,18 @@ class ServerController
 			paths = ["index.html"]
 		
 		switch paths[0]
+			when "build_tools"
+				res.writeHead 200, "Content-type": "application/javascript"
+				res.write fs.readFileSync paths.join "/"
 			when "index.html"
 				res.writeHead 200, "Content-type": "text/html"
-				res.write """<!doctype html><script src="app.c.js"></script>"""
+				res.write fs.readFileSync "index.html"
 			when "app.c.js"
 				res.writeHead 200, "Content-type": "application/javascript"
 				res.write fs.readFileSync "app.c.js"
+			when "client_api"
+				res.writeHead 200, "Content-type": "text/html"
+				res.write "Hello wordl!"
 			else
 				res.writeHead 404
         

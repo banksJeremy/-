@@ -5,44 +5,7 @@ Copyright 2011 Joey Silva and Jeremy Banks
 Client
 ###
 
-setupUI = ->
-	body = $("body")
-	
-	body.append $("<p>").text "Add stuff!"
-	
-	for category in ["example", "lol"]
-		body.append categoryWrapper = $("<div>").css
-			height: "20em"
-			overflow: "auto"
-			float: "left"
-			width: "48%"
-			border: "1px solid black"
-			margin: "0 1%"
-		
-		categoryWrapper.append $("<h3>").text category
-		
-		categoryWrapper.append categoryElement = $("<table>").css
-		   width: "100%"
-		
-		categoryElement.append categoryHeader = $("<tr>")
-		
-		for header in ["foo", "bar", "baz"]
-			categoryHeader.append $("<th>").text header
-		
-		for row in [ [1, 2, 3], [3, 4, 5], [5, 6, 7] ]
-			categoryElement.append rowElement = $("<tr>")
-			
-			for cell in row
-				rowElement.append $("<td>").text cell
-	
-	form = body.append $("form")
-	
-	
-
-jQuery setupUI
-
-###
-server_url = "/client_api/0.1/"
+server_url = "http://localhost:1234/client_api/0.1/"
 
 login = ->
 	login = prompt "Enter your login:"
@@ -136,4 +99,3 @@ jQuery ->
 		dataType: "json"
 	
 	auth_request.then verify_auth
-###
