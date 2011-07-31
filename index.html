@@ -19,6 +19,14 @@
     <script>
       CoffeeTable.deferInit();
       $(function() {
+			$.post("/api", JSON.stringify({
+  method: "sync",
+  params: {
+    fromRevision: 0,
+    updates: []
+  }
+}));
+			
         CoffeeTable.init({
           coffeescript_js:
             "build_tools/CoffeeScript-1.1.1/extras/coffee-script.js"}) })
