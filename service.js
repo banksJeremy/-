@@ -1,4 +1,4 @@
-var highLevelYo = require("./sqlite-high-level.js");
+var highLevelYo = new (require("./sqlite-high-level.js").Database);
 var Deferred = require("jquery").Deferred;
 
 Service = {
@@ -30,4 +30,4 @@ Service = {
     
 }
 
-if (exports) exports = Service;
+if (module) module.exports = Service;

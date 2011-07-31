@@ -14,11 +14,15 @@ var url = require("url");
 var fs = require("fs");
 var jquery = require("jquery");
 
+var util = require("util");
+
+console.log(util.inspect(Service));
+
 var ClientAPI = {
 
 	doRequest: function (session_id, postData, response) {  
 		var user_id = 1;  
-		if (methods.hasOwnProperty(postData.method)) {
+		if (ClientAPI.methods.hasOwnProperty(postData.method)) {
 			ClientAPI.methods[postData.method](user_id, postData.params);
 			response.writeHead(200);
 		}
