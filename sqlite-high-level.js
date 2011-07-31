@@ -18,15 +18,21 @@ exports.Database = function() {
 }
 
 jQuery.extend(exports.Database.prototype, {
-	getMaximumRevision: function() {
-		return server.query("SELECT \"revision\" FROM \"events\" ORDER BY \"revision\" DESC LIMIT 1").pipe(function(row) {
-			return row[0];
+	getLatestRevision: function() {
+		return server.query("SELECT \"revision\" FROM \"events\" ORDER BY \"revision\" DESC LIMIT 1").pipe(function(rows) {
+			return rows[0][0];
 		}).promise();
 	},
 	
-	getAfterRevision: function(id) {
-		return server.query("SELECT \"data\" FROM \"events\" WHERE \"revision\" > " + id).pipe(function(row) {
-			return JSON.parse(row[0]);
+	getUpdatesFrom: function(userID, revision) {
+		return server.query("SELECT \"data\" FROM \"events\" WHERE \"owner's id\" = " + userID + " \"revision\" > " + id).pipe(function(rows) {
+			return rows.map(function(row) { JSON.parse(row[0]) });
 		}).promise();
+	}
+	
+	postUpdates: function(userID, updates) {
+		updates.forEach(function(update) {
+			server.query("INSERT INTO \"events\"(\"owner's id\", \"data\") VALUES (" + userID + ", " + JSON.serialize(JSON.serialize(update)) + ")");
+		});
 	}
 });
