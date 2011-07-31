@@ -1,17 +1,31 @@
+var highLevelYo = require("./sqlite-high-level.js");
+var Deferred = require("jquery").Deferred;
+
 Service = {
 
     sync: function (user_id, fromRevision, updates) {
+        var result = new Deferred;
         
-        var updates = {head: 200, body: {}};
+        highLevelYo.getLatestRevision(user_id).then(function(serverRevision) {
+			var updates = {head: 200, body: {}};
+			
+			if (fromRevision < serverRevision) {
+				highLevelYo.getUpdatesFrom(user_id, fromRevision).then(function(update_data) {
+					updates.body = update_data;
+					result.resolve(updates);
+				});
+			} else if (fromRevision == serverRevision) {
+				highLevelYo.postUpdates(user_id, updates).then(function() {
+					result.resolve(updates);
+				});
+			} else {
+				updates.head = 400;
+				result.resolve(updates);
+			}
+        	
+        });
         
-        var serverRevision = getLatestRevision(user_id);
-        if (fromRevision < serverRevision) {
-            updates.body = getUpdatesFrom(user_id, fromRevision);
-        } else if (fromRevision == serverRevision) {
-            postUpdates(user_id, updates);
-        } else {
-            updates.head = 400;
-        }
+        return result;
     }
     
 }

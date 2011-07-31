@@ -2,3 +2,4 @@
 *.db
 *.c.js
 *.m.js
+.DS_Store
