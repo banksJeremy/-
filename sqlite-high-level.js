@@ -28,7 +28,7 @@ jQuery.extend(exports.Database.prototype, {
 		return server.query("SELECT \"data\" FROM \"events\" WHERE \"owner's id\" = " + userID + " \"revision\" > " + id).pipe(function(rows) {
 			return rows.map(function(row) { JSON.parse(row[0]) });
 		}).promise();
-	}
+	},
 	
 	postUpdates: function(userID, updates) {
 		updates.forEach(function(update) {
