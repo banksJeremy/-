@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var server = new (require("./client.js").AsyncSqliteServer);
+var server = new (require("./sqlite-client.js").AsyncSqliteServer);
 var util = require("util");
 var jQuery = require("jquery");
 

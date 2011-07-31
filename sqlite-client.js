@@ -4,7 +4,7 @@ var child_process = require("child_process"),
     Deferred = jQuery.Deferred;
 
 exports.AsyncSqliteServer = function() {
-	this._process = child_process.spawn("./server.py");
+	this._process = child_process.spawn("./sqlite-server.py");
 	this._process.stdin.setEncoding("utf8");
 	this._process.stdout.setEncoding("utf8");
 	this._process.stderr.setEncoding("utf8");
