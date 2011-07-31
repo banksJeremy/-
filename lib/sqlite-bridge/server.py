@@ -36,17 +36,20 @@ class SQLiteServer(object):
             self.out_queue.put(self._do_work(self.in_queue.get()))
     
     def _do_work(self, work):
-    	return {"input": work}
+        return {"input": work}
     
     def do_input(self):
         while True:
             # self.in_queue.put(json.load(self.in_stream))
-            self.in_queue.put(json.loads(self.in_stream.readline()))
+            sys.stderr.write("reading line:")
+            line = self.in_stream.readline()
+            sys.stderr.write(line)
+            o = json.loads(line)
+            self.in_queue.put(o)
     
     def do_output(self):
         while True:
             json.dump(self.out_queue.get(), self.out_stream)
-            self.out_stream.flush()
 
 def quote_identifier(s, errors="strict"):
     """Quotes a SQLite identifier."""
