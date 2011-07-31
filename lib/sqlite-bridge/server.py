@@ -7,7 +7,7 @@ import threading
 import queue
 
 class SQLiteServer(object):
-    QUEUE_SIZE = 16
+    QUEUE_SIZE = 0
     
     def __init__(self, in_stream, out_stream):
         self.in_stream = in_stream
@@ -33,23 +33,27 @@ class SQLiteServer(object):
     
     def do_work(self):
         while self.working:
+            sys.stderr.write("DOING WORK\n")
             self.out_queue.put(self._do_work(self.in_queue.get()))
+            sys.stderr.write("DONE WORK\n")
     
     def _do_work(self, work):
-        return {"input": work}
+        return {"input": work, "id": work["id"]}
     
     def do_input(self):
         while True:
             # self.in_queue.put(json.load(self.in_stream))
-            sys.stderr.write("reading line:")
             line = self.in_stream.readline()
-            sys.stderr.write(line)
+            sys.stderr.write("rea line....\n")
             o = json.loads(line)
             self.in_queue.put(o)
+            sys.stderr.write("PUT!!")
     
     def do_output(self):
         while True:
             json.dump(self.out_queue.get(), self.out_stream)
+            sys.stderr.write("wrote line\n")
+            self.out_stream.write("\n")
 
 def quote_identifier(s, errors="strict"):
     """Quotes a SQLite identifier."""
