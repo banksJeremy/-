@@ -23,7 +23,7 @@ var ClientAPI = {
 	doRequest: function (session_id, postData, response) {  
 		var user_id = 1;  
 		if (ClientAPI.methods.hasOwnProperty(postData.method)) {
-			ClientAPI.methods[postData.method](user_id, postData.params);
+			ClientAPI.methods[postData.method](user_id, postData.params, response);
 			response.writeHead(200);
 		}
 	},
@@ -33,7 +33,7 @@ var ClientAPI = {
 			var deferred = Service.sync(user_id, params.fromRevision, params.updates);
             deferred.then(function(updates) {
                 response.writeHead(updates.head);
-                response.write(updates.body);
+                response.write(JSON.stringify(updates.body));
             });
 		}
 	}
@@ -126,6 +126,7 @@ var ServerController = (function() {
                     break;
                 case "api":
 					ClientAPI.doRequest(cookies.session_id, postData, res);
+					break;
                 default:
                     res.writeHead(404);
                     res.end();

@@ -43,6 +43,8 @@ class SQLiteServer(object):
     def _do_work(self, work):
         query = work["params"]["query"]
         
+        sys.stderr.write("QUERY IS " + query)
+        
         try:
             with self.connection as c:
                 result = list(c.execute(query).fetchall())

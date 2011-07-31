@@ -20,7 +20,11 @@ exports.Database = function() {
 jQuery.extend(exports.Database.prototype, {
 	getLatestRevision: function() {
 		return server.query("SELECT \"revision\" FROM \"events\" ORDER BY \"revision\" DESC LIMIT 1").pipe(function(rows) {
-			return rows[0][0];
+			if (rows.length) {
+				return rows[0][0];
+			} else {
+				return 0;
+			}
 		}).promise();
 	},
 	
@@ -31,8 +35,13 @@ jQuery.extend(exports.Database.prototype, {
 	},
 	
 	postUpdates: function(userID, updates) {
+		console.log(updates);
 		updates.forEach(function(update) {
-			server.query("INSERT INTO \"events\"(\"owner's id\", \"data\") VALUES (" + userID + ", " + JSON.serialize(JSON.serialize(update)) + ")");
+			server.query("INSERT INTO \"events\"(\"owner's id\", \"data\") VALUES (" + userID + ", " + JSON.stringify(JSON.stringify(update)) + ")");
 		});
+		
+		var result = new jQuery.Deferred;
+		result.resolve();
+		return result;
 	}
 });

@@ -3,7 +3,7 @@ var Deferred = require("jquery").Deferred;
 
 Service = {
 
-    sync: function (user_id, fromRevision, updates) {
+    sync: function (user_id, fromRevision, updates_array) {
         var result = new Deferred;
         
         highLevelYo.getLatestRevision(user_id).then(function(serverRevision) {
@@ -15,7 +15,7 @@ Service = {
 					result.resolve(updates);
 				});
 			} else if (fromRevision == serverRevision) {
-				highLevelYo.postUpdates(user_id, updates).then(function() {
+				highLevelYo.postUpdates(user_id, updates_array).then(function() {
 					result.resolve(updates);
 				});
 			} else {
