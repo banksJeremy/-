@@ -15,7 +15,8 @@ window.indexedDB = window.indexedDB ||
                    function() { throw new Error("Fatal Error: IndexedDB is              unavailable.");}()
 
 for (var name in window) {
-    if (var match = /^[a-z]+(IDB.*)$/.exec(name)) {
+    var match = /^[a-z]+(IDB.*)$/.exec(name);
+    if (match) {
         window[match[1]] = window[name];
     }
 }
@@ -40,7 +41,7 @@ $(function() {
 function createCategory() {
 
     var category = $("#category_name").value;
-
+    
 }
 
 db = null;
@@ -53,5 +54,5 @@ indexedDB.open = function() {
     // Do some more stuff in a minute
   };
 
-  request.onfailure = function() { alert("Fuck"); };
+  request.onfailure = function() { alert("Well fuck"); };
 };

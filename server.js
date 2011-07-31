@@ -25,9 +25,11 @@ var ClientAPI = {
 	
 	methods: {		
 		sync: function(user_id, params, response) {
-			var updates = Service.sync(user_id, params.fromRevision, params.updates);
-			response.writeHead(updates.head);
-			response.write(updates.body);
+			var deferred = Service.sync(user_id, params.fromRevision, params.updates);
+            deferred.then(function(updates) {
+                response.writeHead(updates.head);
+                response.write(updates.body);
+            });
 		}
 	}
 
@@ -39,7 +41,7 @@ var ServerController = (function() {
 		console.log("MAKING SERVER");
 		this.server = http.createServer((function(req, res) {
 			console.log("GOT");
-			return this.handleRequest(req, res);
+			this.handleRequest(req, res);
 		}).bind(this));
 	}
 	
@@ -98,18 +100,21 @@ var ServerController = (function() {
                         "Content-type": "application/javascript"
                     });
                     res.write(fs.readFileSync(paths.join("/")));
+                    res.end();
                     break;
                 case "index.html":
                     res.writeHead(200, {
                         "Content-type": "text/html"
                     });
                     res.write(fs.readFileSync("index.html"));
+                    res.end();
                     break;
                 case "app.js":
                     res.writeHead(200, {
                         "Content-type": "application/javascript"
                     });
                     res.write(fs.readFileSync("app.js"));
+                    res.end();
                     break;
                 case "api":
 					switch (paths[1]) {
@@ -118,12 +123,13 @@ var ServerController = (function() {
 							break;
 						default:
 							res.writeHead(404);
+                            res.end();
 					}
                     break;
                 default:
                     res.writeHead(404);
+                    res.end();
             }
-            return res.end();
         });	
     }
     
