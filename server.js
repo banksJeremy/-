@@ -121,15 +121,7 @@ var ServerController = (function() {
                     res.end();
                     break;
                 case "api":
-					switch (paths[1]) {
-						case "sync":
-                    		ClientAPI.doRequest(cookies.session_id, postData, res);
-							break;
-						default:
-							res.writeHead(404);
-                            res.end();
-					}
-                    break;
+					ClientAPI.doRequest(cookies.session_id, postData, res);
                 default:
                     res.writeHead(404);
                     res.end();
