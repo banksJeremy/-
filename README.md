@@ -5,7 +5,7 @@ traqk
 
 ---
 
-Copyright 2011 Joey Silva and Jeremy Banks
+Copyright 2011 Joey Silva and Jeremy Banks and Friends
 
 #### License: MIT
 
